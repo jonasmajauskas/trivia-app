@@ -21,5 +21,6 @@ export async function getTriviaQuestions(keyword: string, difficulty: string) {
     });
   
     const json = await res.json();
+    
     return json.choices?.[0]?.message?.content || '';
   }  
