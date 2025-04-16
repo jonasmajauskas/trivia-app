@@ -21,16 +21,27 @@ export default function HomePage() {
 
   const generate = async () => {
     setLoading(true);
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      body: JSON.stringify({ keyword, difficulty }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const data = await res.json();
-    setQuestions(data.data);
-    setShowAll(false); // reset on new generation
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        body: JSON.stringify({ keyword, difficulty }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        setQuestions(data.data);
+      } else {
+        alert(data.error || 'Something went wrong. Try again.');
+      }
+    } catch (err) {
+      alert('Network error. Please try again later.');
+      console.error(err);
+    }
     setLoading(false);
   };
+  
 
   return (
     <main className="max-w-xl mx-auto py-12">

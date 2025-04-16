@@ -3,8 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const { keyword, difficulty } = await req.json();
-  const raw = await getTriviaQuestions(keyword, difficulty);
+  let raw = '';
 
+  try {
+    raw = await getTriviaQuestions(keyword, difficulty);
+  } catch (error) {
+    console.error("❌ Failed to fetch from DeepSeek:", error);
+    return NextResponse.json(
+      { error: 'Failed to generate questions. Please try again later.' },
+      { status: 500 }
+    );
+  }
+  
   console.log("🔍 DeepSeek raw output:\n", raw);
 
   if (!raw || typeof raw !== 'string') {
